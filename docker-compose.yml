@@ -1,0 +1,26 @@
+version: "3.4"
+
+services:
+  php:
+    build:
+      context: .
+      target: dev
+    entrypoint: php
+    command: bin/console server:run *:8080
+    working_dir: /code
+    env_file: .env
+    environment:
+      DATABASE_URL: "pgsql://influxdb:awesomePassword@postgresql:5432/influxdb-php-example"
+    volumes:
+      - ".:/code:cached"
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgresql
+
+  postgresql:
+    image: postgres:11
+    environment:
+      POSTGRES_USER: influxdb
+      POSTGRES_PASSWORD: awesomePassword
+      POSTGRES_DB: influxdb-php-example
